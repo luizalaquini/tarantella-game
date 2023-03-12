@@ -31,13 +31,14 @@ gameScene.init = function(){
     this.correct_input_y =  530; //px - Aonde o input deve estar quando o jogador apertar para ganhar máximo pontos
     this.correct_input_margin = 30; //px para cima e para baixo que ainda aceita o input sem erro
 
-    this.speed = 1;
+    this.tamanho_tempo = this.correct_input_margin*2; //Um beat da música são 60 px
+    this.speed = 100; //Quantos beats por minuto
     this.score = 0;
 
     this.array_inputs = []
     for(let i=0; i<40; i++){
         let current_input = {
-            length: getRandomInt(60, 120),
+            length: getRandomInt(1, 5)*this.tamanho_tempo,
             key: getRandomInt(37,41)
         }
         this.array_inputs.push(current_input);
@@ -98,7 +99,6 @@ gameScene.create = function(positionY){
         //this.array_inputs[i].gameObject = drawInput(this.array_inputs[i], position);
     }
 
-
     //Show score
     this.score_label = this.add.text(this.play_area_width+10, 30, 'Score: ', { fontSize: '20px', fill: '#00000' });
     this.score_label.setOrigin(0,0);
@@ -106,11 +106,13 @@ gameScene.create = function(positionY){
     this.score_text.setOrigin(0,0);
 };
 
-gameScene.update = function(){
+gameScene.update = function(timestep, dt){
     //update inputs positions and draw them
+    let movementY = this.speed/60 * this.tamanho_tempo * dt/1000;
     for (let i=0; i<this.array_inputs.length; i++){
-        this.array_inputs[i].gameObject.y = this.array_inputs[i].gameObject.y + this.speed; //Precisamos contar o tempo desde o ultimo fram para ficar constante a velocidade
+        this.array_inputs[i].gameObject.y = this.array_inputs[i].gameObject.y + movementY; //Precisamos contar o tempo desde o ultimo fram para ficar constante a velocidade
     }
+    //Verifica se o primeir input passou o limite de baixo
     if(this.array_inputs[0].gameObject.y > (this.correct_input_y+this.correct_input_margin)){
         //Fazer animação da peça sumindo (O usuário errou, não apertou a tempo)
         this.score -= 500;
@@ -118,7 +120,6 @@ gameScene.update = function(){
         this.array_inputs.shift(); //Retira o primeiro elemento
 
     }
-
     //console.log(this.array_inputs[0].gameObject.y)
     this.score_text.text = Math.round(this.score);
 };
@@ -126,7 +127,7 @@ gameScene.update = function(){
 
 //Auxiliary functions
 function myOnKeyDown(event){
-    console.log("Apertou "+event.keyCode);
+    //console.log("Apertou "+event.keyCode);
     if(event.keyCode >= 37 && event.keyCode <= 40){
         //Trata o aperto de uma seta
         //Se o próximo input estiver dentro da área de acerto:
