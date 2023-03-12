@@ -20,10 +20,10 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-const right_code = 0;
-const left_code = 1;
-const up_code = 2;
-const down_code = 3;
+const right_code = 39;
+const left_code = 37;
+const up_code = 38;
+const down_code = 40;
 
 gameScene.init = function(){
     this.input_sprite_width = 1;
@@ -32,12 +32,13 @@ gameScene.init = function(){
     this.correct_input_margin = 30; //px para cima e para baixo que ainda aceita o input sem erro
 
     this.speed = 1;
+    this.score = 0;
 
     this.array_inputs = []
     for(let i=0; i<40; i++){
         let current_input = {
-            length: getRandomInt(40, 120),
-            key: getRandomInt(0,4)
+            length: getRandomInt(60, 120),
+            key: getRandomInt(37,41)
         }
         this.array_inputs.push(current_input);
     }
@@ -53,6 +54,11 @@ gameScene.preload = function(){
 };
 
 gameScene.create = function(positionY){
+    //Keyboard mapping
+    gameScene.input.keyboard.on('keydown', myOnKeyDown);
+    //scene.input.keyboard.on('keyup', function (event) { /* ... */ });    
+
+    //Draw
     this.bg = this.add.image(400, 300, 'bg');
 
     this.area_input = this.add.image(this.play_area_width/2.0, this.correct_input_y, 'correct_input_area');
@@ -86,11 +92,18 @@ gameScene.create = function(positionY){
                 break;
         }
         let current_input = this.add.image(this.play_area_width/2, position-(this.array_inputs[i].length/2), image_name);
-        current_input.setScale(0.5*this.play_area_width/100, this.array_inputs[i].length/100);  
+        current_input.setScale(0.5*this.play_area_width/100, 2*this.correct_input_margin/100.0);  
 
         this.array_inputs[i].gameObject = current_input;
         //this.array_inputs[i].gameObject = drawInput(this.array_inputs[i], position);
     }
+
+
+    //Show score
+    this.score_label = this.add.text(this.play_area_width+10, 30, 'Score: ', { fontSize: '20px', fill: '#00000' });
+    this.score_label.setOrigin(0,0);
+    this.score_text = this.add.text(this.play_area_width+80, 30, '0', { fontSize: '20px', fill: '#00000' });
+    this.score_text.setOrigin(0,0);
 };
 
 gameScene.update = function(){
@@ -98,6 +111,41 @@ gameScene.update = function(){
     for (let i=0; i<this.array_inputs.length; i++){
         this.array_inputs[i].gameObject.y = this.array_inputs[i].gameObject.y + this.speed; //Precisamos contar o tempo desde o ultimo fram para ficar constante a velocidade
     }
+    if(this.array_inputs[0].gameObject.y > (this.correct_input_y+this.correct_input_margin)){
+        //Fazer animação da peça sumindo (O usuário errou, não apertou a tempo)
+        this.score -= 500;
+        this.array_inputs[0].gameObject.destroy();
+        this.array_inputs.shift(); //Retira o primeiro elemento
+
+    }
 
     //console.log(this.array_inputs[0].gameObject.y)
+    this.score_text.text = Math.round(this.score);
 };
+
+
+//Auxiliary functions
+function myOnKeyDown(event){
+    console.log("Apertou "+event.keyCode);
+    if(event.keyCode >= 37 && event.keyCode <= 40){
+        //Trata o aperto de uma seta
+        //Se o próximo input estiver dentro da área de acerto:
+        if(gameScene.array_inputs[0].gameObject.y >= gameScene.correct_input_y-gameScene.correct_input_margin
+        && gameScene.array_inputs[0].gameObject.y <= gameScene.correct_input_y+gameScene.correct_input_margin){
+            if(event.keyCode === gameScene.array_inputs[0].key){
+                //Define pontuação caso acerte a tecla
+                let erro = Math.abs(gameScene.array_inputs[0].gameObject.y - gameScene.correct_input_y);
+                gameScene.score += gameScene.correct_input_margin - erro; //Quanto mais perto do meio mais pontos ganha
+            } else {
+                //Define pontuação caso erre a tecla 
+                gameScene.score -= 200;
+            }
+            //Remove input
+            gameScene.array_inputs[0].gameObject.destroy();
+            gameScene.array_inputs.shift();
+        } else {
+            //Tira pontos por apertar muito antes
+            gameScene.score -= gameScene.correct_input_y - gameScene.array_inputs[0].gameObject.y;
+        }
+    }
+}
