@@ -33,6 +33,9 @@ gameScene.init = function(){
 
     this.game_is_playing = false;
     this.count = 1;
+    this.timeElapsed = 0;
+    this.song_speed = 1;
+    this.max_song_speed = 1.4;
 
     this.array_inputs = []
     this.tamanho_segundo = 250; //Um segundo são X pixels
@@ -83,15 +86,29 @@ gameScene.create = function(positionY){
 
 gameScene.update = function(timestep, dt){
     if(this.array_inputs.length <= 0){
-        console.log("Recreating inputs");
-        createInputs();
-        console.log("Restarting song");
-        gameScene.song.stop();
-        gameScene.song.play();
+        if(this.timeElapsed > 1000){
+            this.timeElapsed = 0;
+            console.log("Recreating inputs");
+            createInputs();
+            console.log("Restarting song");
+            gameScene.song.stop();
+            gameScene.song.play();
+            this.game_is_playing = true;
+        } else {
+            this.game_is_playing = false;
+            this.timeElapsed += dt;
+        }
     }
     if(this.game_is_playing && this.song.isPlaying){
+        //Update song speed
+        this.song_speed += 0.0010*dt/1000;
+        if(this.song_speed > this.max_song_speed){
+            this.song_speed = this.max_song_speed;
+        }
+        //console.log(this.song_speed);
+        this.song.setRate(this.song_speed);
         //update inputs positions and draw them
-        let movementY = this.tamanho_segundo * dt/1000;
+        let movementY = this.song_speed*this.tamanho_segundo * dt/1000;
         for (let i=0; i<this.array_inputs.length; i++){
             this.array_inputs[i].gameObject.y = this.array_inputs[i].gameObject.y + movementY; //Precisamos contar o tempo desde o ultimo fram para ficar constante a velocidade
         }
@@ -103,7 +120,7 @@ gameScene.update = function(timestep, dt){
             this.array_inputs.shift(); //Retira o primeiro elemento
             this.count+=1;
             //console.log(this.count);
-            console.log(gameScene.array_inputs.length);
+            //console.log(gameScene.array_inputs.length);
         }
         this.score_text.text = Math.round(this.score);
     }
@@ -136,7 +153,7 @@ function myOnKeyDown(event){
             gameScene.array_inputs.shift();
             gameScene.count+=1;
             //console.log(gameScene.count);
-            console.log(gameScene.array_inputs.length);
+            //console.log(gameScene.array_inputs.length);
         } else {
             //Tira pontos por apertar muito antes
             gameScene.score -= 30;
@@ -145,7 +162,7 @@ function myOnKeyDown(event){
             gameScene.array_inputs.shift();
             gameScene.count+=1;
             //console.log(gameScene.count);
-            console.log(gameScene.array_inputs.length);
+            //console.log(gameScene.array_inputs.length);
         }
     }
 }
