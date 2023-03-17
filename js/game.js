@@ -31,6 +31,9 @@ gameScene.init = function(){
     this.correct_input_y =  492; //px - Aonde o input deve estar quando o jogador apertar para ganhar máximo pontos
     this.correct_input_margin = 50; //px para cima e para baixo que ainda aceita o input sem erro
 
+    this.time_elapsed_feedback = 0;
+    this.time_total_feedback = 1;
+
     this.game_is_playing = false;
     this.count = 1;
     this.timeElapsed = 0;
@@ -78,6 +81,11 @@ gameScene.create = function(positionY){
     this.score_text = this.add.text(this.play_area_width+130, 30, '0', { fontSize: '20px', fill: '#ffffff' });
     this.score_text.setOrigin(0,0);
 
+    //Show feedback
+    this.text_feedback = gameScene.add.text(gameScene.play_area_width/2+28, 
+    gameScene.correct_input_y, '', { fontSize: '20px', fill: '#ffffff' });
+    this.text_feedback.setOrigin(0.5, 0.5);
+
     //Play song
     this.song = this.sound.add('tarant_song');
 
@@ -105,6 +113,11 @@ gameScene.update = function(timestep, dt){
         if(this.song_speed > this.max_song_speed){
             this.song_speed = this.max_song_speed;
         }
+        //Count feedback time
+        this.time_elapsed_feedback += dt/1000;
+        if(this.time_elapsed_feedback > this.time_total_feedback/this.song_speed){
+            this.text_feedback.setText("");
+        }
         //console.log(this.song_speed);
         this.song.setRate(this.song_speed);
         //update inputs positions and draw them
@@ -121,6 +134,9 @@ gameScene.update = function(timestep, dt){
             this.count+=1;
             //console.log(this.count);
             //console.log(gameScene.array_inputs.length);
+            gameScene.text_feedback.setText('Errore')
+            gameScene.text_feedback.setStyle({ fontSize: '20px', fill: '#000000' });
+            gameScene.time_elapsed_feedback = 0;
         }
         this.score_text.text = Math.round(this.score);
     }
@@ -148,9 +164,24 @@ function myOnKeyDown(event){
                 //Define pontuação caso acerte a tecla
                 let erro = Math.abs(gameScene.array_inputs[0].gameObject.y - gameScene.correct_input_y);
                 gameScene.score += gameScene.correct_input_margin - erro; //Quanto mais perto do meio mais pontos ganha
+
+                //Da feedback sobre o acerto
+                if((gameScene.correct_input_margin - erro) > 40){
+                    gameScene.text_feedback.setText('Perfetto')
+                    gameScene.text_feedback.setStyle({ fontSize: '20px', fill: '#21f26c' });
+                    gameScene.time_elapsed_feedback = 0;
+                } else {
+                    gameScene.text_feedback.setText('Buono')
+                    gameScene.text_feedback.setStyle({ fontSize: '20px', fill: '#ffffff' });
+                                            
+                    gameScene.time_elapsed_feedback = 0;
+                }
             } else {
                 //Define pontuação caso erre a tecla 
                 gameScene.score -= 30;
+                gameScene.text_feedback.setText('Errore')
+                gameScene.text_feedback.setStyle({ fontSize: '20px', fill: '#000000' });
+                gameScene.time_elapsed_feedback = 0;
             }
             //Remove input
             gameScene.array_inputs[0].gameObject.destroy();
@@ -167,6 +198,9 @@ function myOnKeyDown(event){
             gameScene.count+=1;
             //console.log(gameScene.count);
             //console.log(gameScene.array_inputs.length);
+            gameScene.text_feedback.setText('Errore')
+            gameScene.text_feedback.setStyle({ fontSize: '20px', fill: '#000000' });
+            gameScene.time_elapsed_feedback = 0;
         }
     }
 }
