@@ -61,21 +61,6 @@ gameScene.create = function(positionY){
     gameScene.input.keyboard.on('keydown', myOnKeyDown);
     //scene.input.keyboard.on('keyup', function (event) { /* ... */ });    
 
-    //Get inputs
-    let inputs_song = this.cache.text.get('inputs_song');
-    this.arrayInputsSong = inputs_song.split('\n');
-    for(let i=1; i<this.arrayInputsSong.length; i++){
-        let keyCode = parseInt(this.arrayInputsSong[i].split(' ')[0])
-        let positionKey = parseInt(this.arrayInputsSong[i].split(' ')[1])
-        let current_input = {
-            position: (-(positionKey+900)/1000)*(this.tamanho_segundo),
-            key: keyCode
-        }
-        this.array_inputs.push(current_input);
-    }
-
-    //console.log(this.array_inputs)
-
     //Draw
     this.bg = this.add.image(400, 300, 'bg');
 
@@ -83,32 +68,6 @@ gameScene.create = function(positionY){
     this.area_input.setScale(this.play_area_width/100, 2*this.correct_input_margin/100.0);
 
     this.add.line(0,300, this.play_area_width,0, this.play_area_width, 600,  0x000000);
-
-    //Create inputs
-    for (let i=0; i<this.array_inputs.length; i++){
-        let position = this.array_inputs[i].position+this.correct_input_y;
-        
-        let image_name;
-        switch(this.array_inputs[i].key){
-            case right_code:
-                image_name = 'input_right';
-                break;
-            case left_code:
-                image_name = 'input_left';
-                break;
-            case up_code:
-                image_name = 'input_up';
-                break;
-            case down_code:
-                image_name = 'input_down';
-                break;
-        }
-        let current_input = this.add.image(this.play_area_width/2, position, image_name);
-        current_input.setScale(0.5*this.play_area_width/100, 2*this.correct_input_margin/100.0);  
-
-        this.array_inputs[i].gameObject = current_input;
-        //this.array_inputs[i].gameObject = drawInput(this.array_inputs[i], position);
-    }
 
     //Show score
     this.score_label = this.add.text(this.play_area_width+10, 30, 'Score: ', { fontSize: '20px', fill: '#00000' });
@@ -118,9 +77,18 @@ gameScene.create = function(positionY){
 
     //Play song
     this.song = this.sound.add('tarant_song');
+
+    createInputs();    
 };
 
 gameScene.update = function(timestep, dt){
+    if(this.array_inputs.length <= 0){
+        console.log("Recreating inputs");
+        createInputs();
+        console.log("Restarting song");
+        gameScene.song.stop();
+        gameScene.song.play();
+    }
     if(this.game_is_playing && this.song.isPlaying){
         //update inputs positions and draw them
         let movementY = this.tamanho_segundo * dt/1000;
@@ -134,10 +102,9 @@ gameScene.update = function(timestep, dt){
             this.array_inputs[0].gameObject.destroy();
             this.array_inputs.shift(); //Retira o primeiro elemento
             this.count+=1;
-            console.log(this.count);
-
+            //console.log(this.count);
+            console.log(gameScene.array_inputs.length);
         }
-        //console.log(this.array_inputs[0].gameObject.y)
         this.score_text.text = Math.round(this.score);
     }
 };
@@ -149,7 +116,7 @@ function myOnKeyDown(event){
         gameScene.game_is_playing = true;
         gameScene.song.play();
         return;
-    }
+    } 
     //console.log("Apertou "+event.keyCode);
     if(event.keyCode >= 37 && event.keyCode <= 40){
         //Trata o aperto de uma seta
@@ -168,7 +135,8 @@ function myOnKeyDown(event){
             gameScene.array_inputs[0].gameObject.destroy();
             gameScene.array_inputs.shift();
             gameScene.count+=1;
-            console.log(gameScene.count);
+            //console.log(gameScene.count);
+            console.log(gameScene.array_inputs.length);
         } else {
             //Tira pontos por apertar muito antes
             gameScene.score -= 30;
@@ -176,7 +144,53 @@ function myOnKeyDown(event){
             gameScene.array_inputs[0].gameObject.destroy();
             gameScene.array_inputs.shift();
             gameScene.count+=1;
-            console.log(gameScene.count);
+            //console.log(gameScene.count);
+            console.log(gameScene.array_inputs.length);
         }
+    }
+}
+
+
+function createInputs(){
+    gameScene.array_inputs = []
+    //Get inputs
+    let inputs_song = gameScene.cache.text.get('inputs_song');
+    gameScene.arrayInputsSong = inputs_song.split('\n');
+    for(let i=1; i<gameScene.arrayInputsSong.length; i++){
+        let keyCode = parseInt(gameScene.arrayInputsSong[i].split(' ')[0])
+        let positionKey = parseInt(gameScene.arrayInputsSong[i].split(' ')[1])
+        if(isNaN(keyCode) || isNaN(positionKey)){
+            continue;
+        }
+        let current_input = {
+            position: (-(positionKey+900)/1000)*(gameScene.tamanho_segundo),
+            key: keyCode
+        }
+        gameScene.array_inputs.push(current_input);
+    }
+
+    //Create inputs
+    for (let i=0; i<gameScene.array_inputs.length; i++){
+        let position = gameScene.array_inputs[i].position+gameScene.correct_input_y;
+        
+        let image_name;
+        switch(gameScene.array_inputs[i].key){
+            case right_code:
+                image_name = 'input_right';
+                break;
+            case left_code:
+                image_name = 'input_left';
+                break;
+            case up_code:
+                image_name = 'input_up';
+                break;
+            case down_code:
+                image_name = 'input_down';
+                break;
+        }
+        let current_input = gameScene.add.image(gameScene.play_area_width/2, position, image_name);
+        current_input.setScale(0.5*gameScene.play_area_width/100, 2*gameScene.correct_input_margin/100.0);  
+
+        gameScene.array_inputs[i].gameObject = current_input;
     }
 }
