@@ -27,15 +27,16 @@ const down_code = 40;
 
 gameScene.init = function(){
     this.input_sprite_width = 1;
-    this.play_area_width = 300;
-    this.correct_input_y =  530; //px - Aonde o input deve estar quando o jogador apertar para ganhar máximo pontos
-    this.correct_input_margin = 40; //px para cima e para baixo que ainda aceita o input sem erro
+    this.play_area_width = 400;
+    this.correct_input_y =  492; //px - Aonde o input deve estar quando o jogador apertar para ganhar máximo pontos
+    this.correct_input_margin = 50; //px para cima e para baixo que ainda aceita o input sem erro
 
     this.game_is_playing = false;
     this.count = 1;
     this.timeElapsed = 0;
     this.song_speed = 1;
     this.max_song_speed = 1.4;
+    gameScene.key_is_pressed = false;
 
     this.array_inputs = []
     this.tamanho_segundo = 250; //Um segundo são X pixels
@@ -44,12 +45,12 @@ gameScene.init = function(){
 };
 
 gameScene.preload = function(){
-    this.load.image('bg', 'assets/gray_bg.png');
-    this.load.image('correct_input_area', 'assets/correct_input_area.png')
-    this.load.image('input_right', 'assets/inputs/input_right.png');
-    this.load.image('input_left', 'assets/inputs/input_left.png');
-    this.load.image('input_up', 'assets/inputs/input_up.png');
-    this.load.image('input_down', 'assets/inputs/input_down.png');
+    this.load.image('bg', 'assets/in_game.png');
+    //this.load.image('correct_input_area', 'assets/correct_input_area.png')
+    this.load.image('input_right', 'assets/inputs/right_arrow.png');
+    this.load.image('input_left', 'assets/inputs/left_arrow.png');
+    this.load.image('input_up', 'assets/inputs/up_arrow.png');
+    this.load.image('input_down', 'assets/inputs/down_arrow.png');
 
     //Load song
     //  Firefox doesn't support mp3 files, so use ogg
@@ -62,20 +63,19 @@ gameScene.preload = function(){
 gameScene.create = function(positionY){
     //Keyboard mapping
     gameScene.input.keyboard.on('keydown', myOnKeyDown);
+    gameScene.input.keyboard.on('keyup', myOnKeyUp);
     //scene.input.keyboard.on('keyup', function (event) { /* ... */ });    
 
     //Draw
     this.bg = this.add.image(400, 300, 'bg');
 
-    this.area_input = this.add.image(this.play_area_width/2.0, this.correct_input_y, 'correct_input_area');
-    this.area_input.setScale(this.play_area_width/100, 2*this.correct_input_margin/100.0);
-
-    this.add.line(0,300, this.play_area_width,0, this.play_area_width, 600,  0x000000);
+    //this.area_input = this.add.image(this.play_area_width/2.0, this.correct_input_y, 'correct_input_area');
+    //this.area_input.setScale(this.play_area_width/100, 2*this.correct_input_margin/100.0);
 
     //Show score
-    this.score_label = this.add.text(this.play_area_width+10, 30, 'Score: ', { fontSize: '20px', fill: '#00000' });
+    this.score_label = this.add.text(this.play_area_width+10, 30, 'Pontuação: ', { fontSize: '20px', fill: '#ffffff' });
     this.score_label.setOrigin(0,0);
-    this.score_text = this.add.text(this.play_area_width+80, 30, '0', { fontSize: '20px', fill: '#00000' });
+    this.score_text = this.add.text(this.play_area_width+130, 30, '0', { fontSize: '20px', fill: '#ffffff' });
     this.score_text.setOrigin(0,0);
 
     //Play song
@@ -129,6 +129,10 @@ gameScene.update = function(timestep, dt){
 
 //Auxiliary functions
 function myOnKeyDown(event){
+    if(gameScene.key_is_pressed){
+        return;
+    }
+    gameScene.key_is_pressed = true;
     if(gameScene.game_is_playing == false){
         gameScene.game_is_playing = true;
         gameScene.song.play();
@@ -165,6 +169,10 @@ function myOnKeyDown(event){
             //console.log(gameScene.array_inputs.length);
         }
     }
+}
+
+function myOnKeyUp(event){
+    gameScene.key_is_pressed = false;
 }
 
 
@@ -205,8 +213,8 @@ function createInputs(){
                 image_name = 'input_down';
                 break;
         }
-        let current_input = gameScene.add.image(gameScene.play_area_width/2, position, image_name);
-        current_input.setScale(0.5*gameScene.play_area_width/100, 2*gameScene.correct_input_margin/100.0);  
+        let current_input = gameScene.add.image(gameScene.play_area_width/2+28, position, image_name);
+        //current_input.setScale(0.5*gameScene.play_area_width/100, 2*gameScene.correct_input_margin/100.0);  
 
         gameScene.array_inputs[i].gameObject = current_input;
     }
