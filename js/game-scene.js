@@ -99,13 +99,10 @@ export default class gameScene extends Phaser.Scene {
     };
 
     update(timestep, dt){
-        //console.log(this.array_inputs);
         if(this.array_inputs.length <= 0){
             if(this.timeElapsed > 1000){
                 this.timeElapsed = 0;
-                console.log("Recreating inputs");
                 this.createInputs();
-                console.log("Restarting song");
                 this.song.stop();
                 this.song.play();
                 this.game_is_playing = true;
@@ -125,7 +122,6 @@ export default class gameScene extends Phaser.Scene {
             if(this.time_elapsed_feedback > this.time_total_feedback/this.song_speed){
                 this.text_feedback.setText("");
             }
-            //console.log(this.song_speed);
             this.song.setRate(this.song_speed);
             //update inputs positions and draw them
             let movementY = this.song_speed*this.tamanho_segundo * dt/1000;
@@ -139,8 +135,6 @@ export default class gameScene extends Phaser.Scene {
                 this.array_inputs[0].gameObject.destroy();
                 this.array_inputs.shift(); //Retira o primeiro elemento
                 this.count+=1;
-                //console.log(this.count);
-                //console.log(this.array_inputs.length);
                 this.qtdErros+=1;
                 this.text_feedback.setText('Errore')
                 this.text_feedback.setStyle({ fontSize: '20px', fill: '#000000' });
@@ -169,16 +163,8 @@ export default class gameScene extends Phaser.Scene {
             this.scene.song.play();
             return;
         } 
-        //console.log("Apertou "+event.keyCode);
         if(event.keyCode >= 37 && event.keyCode <= 40){
             //Trata o aperto de uma seta
-            
-            /*
-            37 left
-            38 up
-            39 right
-            40 down
-            */
             ///DESENHA O JOGADOR
             if(event.keyCode == this.scene.right_code){
                 this.scene.dance.setFrame(1);
@@ -215,7 +201,7 @@ export default class gameScene extends Phaser.Scene {
                 } else {
                     //Define pontuação caso erre a tecla 
                     this.scene.score -= 30;
-                    this.qtdErros+=1;
+                    this.scene.qtdErros+=1;
                     this.scene.text_feedback.setText('Errore')
                     this.scene.text_feedback.setStyle({ fontSize: '20px', fill: '#000000' });
                     this.scene.time_elapsed_feedback = 0;
@@ -224,8 +210,6 @@ export default class gameScene extends Phaser.Scene {
                 this.scene.array_inputs[0].gameObject.destroy();
                 this.scene.array_inputs.shift();
                 this.scene.count+=1;
-                //console.log(this.scene.count);
-                //console.log(this.scene.array_inputs.length);
             } else {
                 //Tira pontos por apertar muito antes
                 this.scene.score -= 30;
@@ -233,9 +217,7 @@ export default class gameScene extends Phaser.Scene {
                 this.scene.array_inputs[0].gameObject.destroy();
                 this.scene.array_inputs.shift();
                 this.scene.count+=1;
-                //console.log(this.scene.count);
-                //console.log(this.scene.array_inputs.length);
-                this.qtdErros+=1;
+                this.scene.qtdErros+=1;
                 this.scene.text_feedback.setText('Errore')
                 this.scene.text_feedback.setStyle({ fontSize: '20px', fill: '#000000' });
                 this.scene.time_elapsed_feedback = 0;
