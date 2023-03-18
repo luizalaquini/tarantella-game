@@ -14,13 +14,9 @@ var config = {
         }
     },
     scene: [
-        //historyScene,
+        historyScene,
         menuScene,
         gameScene
-        
-        
-        
-        //cenaRestart
     ]
 };
 
