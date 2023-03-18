@@ -35,12 +35,20 @@ export default class gameScene extends Phaser.Scene {
     };
 
     preload(){
+        //Load in game menu
         this.load.image('bg', 'assets/in_game.png');
         //this.load.image('correct_input_area', 'assets/correct_input_area.png')
+        
+        //Load input images
         this.load.image('input_right', 'assets/inputs/right_arrow.png');
         this.load.image('input_left', 'assets/inputs/left_arrow.png');
         this.load.image('input_up', 'assets/inputs/up_arrow.png');
         this.load.image('input_down', 'assets/inputs/down_arrow.png');
+
+        //Load male character's dance moves
+        this.load.spritesheet("male_movelist", "assets/male_character_movelist/male_movelist.png", { frameWidth: 500, frameHeight: 400 });
+
+
 
         //Load song
         //  Firefox doesn't support mp3 files, so use ogg
@@ -48,6 +56,8 @@ export default class gameScene extends Phaser.Scene {
 
         //Load song inputs
         this.load.text('inputs_song', 'assets/song_inputs/tarantella_inputs.txt');
+
+        
     };
 
     create(){
@@ -58,7 +68,7 @@ export default class gameScene extends Phaser.Scene {
 
         //Draw
         this.bg = this.add.image(400, 300, 'bg');
-
+        this.dance = this.add.image(600, 400, 'male_movelist').setFrame(0);
         //this.area_input = this.add.image(this.play_area_width/2.0, this.correct_input_y, 'correct_input_area');
         //this.area_input.setScale(this.play_area_width/100, 2*this.correct_input_margin/100.0);
 
@@ -163,9 +173,25 @@ export default class gameScene extends Phaser.Scene {
         if(event.keyCode >= 37 && event.keyCode <= 40){
             //Trata o aperto de uma seta
             
-
+            /*
+            37 left
+            38 up
+            39 right
+            40 down
+            */
             ///DESENHA O JOGADOR
-
+            if(event.keyCode == this.scene.right_code){
+                this.scene.dance.setFrame(1);
+            }
+            else if(event.keyCode == this.scene.left_code){
+                this.scene.dance.setFrame(2);
+            }
+            else if(event.keyCode == this.scene.up_code){
+                this.scene.dance.setFrame(3);
+            }
+            else if(event.keyCode == this.scene.down_code){
+                this.scene.dance.setFrame(4);
+            }
             //Se o próximo input estiver dentro da área de acerto:
             if(this.scene.array_inputs[0].gameObject.y 
                 >= this.scene.correct_input_y-this.scene.correct_input_margin
