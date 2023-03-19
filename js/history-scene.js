@@ -7,6 +7,7 @@ export default class historyScene extends Phaser.Scene {
         this.load.image('b1', 'assets/history/board_1.png');
         this.load.image('b2', 'assets/history/board_2.png');
         this.load.image('b3', 'assets/history/board_3.png');
+        this.load.image('b4', 'assets/history/board_4.png');
     }
 
     create() {
@@ -21,8 +22,12 @@ export default class historyScene extends Phaser.Scene {
         this.time.delayedCall(14000, () => {
             this.add.image(0, 0, 'b3').setOrigin(0, 0);
         }, [], this);
-        // after 18 seconds change to menu
+        // after 18 seconds change to b3
         this.time.delayedCall(21000, () => {
+            this.add.image(0, 0, 'b4').setOrigin(0, 0);
+        }, [], this);
+        // after 24 seconds change to menu
+        this.time.delayedCall(28000, () => {
             this.scene.start('menuScene');
             //this.scene.stop();
         }, [], this);
