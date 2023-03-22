@@ -151,9 +151,9 @@ export default class gameScene extends Phaser.Scene {
         } 
     };
 
-
-    //Auxiliary functions
+    //AUXILIARY FUNCTIONS
     myOnKeyDown(event){
+        event.view.event.preventDefault(); // Prevents the default action (scroll / move caret) during the game
         if(this.scene.key_is_pressed){
             return;
         }
