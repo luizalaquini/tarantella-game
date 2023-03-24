@@ -1,6 +1,5 @@
 # Tarantella 
 ![GitHub contributors](https://img.shields.io/github/contributors/luizalaquini/Tarantella-PET_GAME_JAM_2023) 
-![GitHub](https://img.shields.io/github/license/luizalaquini/Tarantella-PET_GAME_JAM_2023)
 ![GitHub repo size](https://img.shields.io/github/repo-size/luizalaquini/Tarantella-PET_GAME_JAM_2023)
 ![GitHub language count](https://img.shields.io/github/languages/count/luizalaquini/Tarantella-PET_GAME_JAM_2023)
 ![GitHub top language](https://img.shields.io/github/languages/top/luizalaquini/Tarantella-PET_GAME_JAM_2023)
