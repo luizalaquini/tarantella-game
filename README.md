@@ -1,8 +1,9 @@
 # Tarantella 
-![GitHub](https://img.shields.io/github/license/luizalaquini/tarantella-game)
-![GitHub repo size](https://img.shields.io/github/repo-size/luizalaquini/tarantella-game)
-![GitHub language count](https://img.shields.io/github/languages/count/luizalaquini/tarantella-game)
-![GitHub top language](https://img.shields.io/github/languages/top/luizalaquini/tarantella-game)
+![GitHub contributors](https://img.shields.io/github/contributors/luizalaquini/Tarantella-PET_GAME_JAM_2021)
+![GitHub](https://img.shields.io/github/license/luizalaquini/Tarantella-PET_GAME_JAM_2023)
+![GitHub repo size](https://img.shields.io/github/repo-size/luizalaquini/Tarantella-PET_GAME_JAM_2021)
+![GitHub language count](https://img.shields.io/github/languages/count/luizalaquini/Tarantella-PET_GAME_JAM_2021)
+![GitHub top language](https://img.shields.io/github/languages/top/luizalaquini/Tarantella-PET_GAME_JAM_2021)
 ![GitHub followers](https://img.shields.io/github/followers/luizalaquini?label=follow&style=social)
 
 Jogue Aqui (Apenas para Computador!): https://gamejam.pet.inf.ufes.br/gameinfo/6417aab102e72d001d3209ff
