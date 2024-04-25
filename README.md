@@ -5,7 +5,7 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/luizalaquini/Tarantella-PET_GAME_JAM_2023)
 ![GitHub followers](https://img.shields.io/github/followers/luizalaquini?label=follow&style=social)
 
-Jogue Aqui (Apenas para PC!): [https://gamejam.pet.inf.ufes.br/gameinfo/6417aab102e72d001d3209ff](https://tarantella-pet-game-jam-2023.vercel.app/)
+[Jogue Aqui (Apenas para PC!)](https://tarantella-pet-game-jam-2023.vercel.app/)
 
 ## A Competição
 O PET Game Jam é uma competição de desenvolvimento de jogos de navegador criada pelo PET Engenharia de Computação da Ufes. Na segunda edição da competição o tema escolhido foi "Não Pare de Se mexer". Foi dado o prazo de 3 semanas para desenvolvimento do jogo, que deveria utilizar da tecnologia "Phaser 3". As demais regras da competição se encontram nesse link: 
